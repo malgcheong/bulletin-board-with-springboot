@@ -2,6 +2,7 @@ package com.swjungle.board.post.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,5 +40,16 @@ public class Post {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Builder
+    public Post(String title, String content, String link, String category, int score, String author, String password){
+        this.title = title;
+        this.content = content;
+        this.link = link;
+        this.category = category;
+        this.score = score;
+        this.author = author;
+        this.password = password;
+    }
 }
 
