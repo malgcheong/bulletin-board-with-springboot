@@ -2,10 +2,10 @@ package com.swjungle.board.post.controller;
 
 import com.swjungle.board.common.dto.EnvelopeResponse;
 import com.swjungle.board.post.dto.CreatePostRequest;
+import com.swjungle.board.post.dto.PostWrapperResponse;
 import com.swjungle.board.post.dto.PostResponse;
 import com.swjungle.board.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +20,10 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<EnvelopeResponse<PostResponse>> createPost(@RequestBody CreatePostRequest createPostRequest) {
+    public ResponseEntity<EnvelopeResponse<PostWrapperResponse>> createPost(@RequestBody CreatePostRequest createPostRequest) {
         PostResponse postResponse = postService.createPost(createPostRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(EnvelopeResponse.success(postResponse));
+        PostWrapperResponse postData = new PostWrapperResponse(postResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(EnvelopeResponse.success(postData));
     }
 
 }
