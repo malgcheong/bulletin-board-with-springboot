@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swjungle.board.post.controller.PostController;
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
+import com.swjungle.board.post.dto.UpdatePostRequest;
 import com.swjungle.board.post.entity.Post;
 import com.swjungle.board.post.service.PostService;
 import org.hamcrest.Matchers;
@@ -21,11 +22,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,11 +40,14 @@ public class PostControllerTests {
 
     private Post post;
     private CreatePostRequest createPostRequest;
+    private UpdatePostRequest updatePostRequest;
     private PostResponse postResponse;
     private ObjectMapper objectMapper;
+    private LocalDateTime now;
 
     @BeforeEach
     void setUp() {
+        now = LocalDateTime.now(); // 현재 시간 가져오기
         objectMapper = new ObjectMapper(); // ObjectMapper 객체 생성 및 초기화
         LocalDateTime now = LocalDateTime.now(); // 현재 시간 가져오기
 
@@ -55,6 +59,7 @@ public class PostControllerTests {
                 .build();
 
         createPostRequest = new CreatePostRequest("Test Title", "Test Content", "Test Link", "Test Category", 100, "남청우", "1234");
+        updatePostRequest = new UpdatePostRequest("Test Title", "Test Content", "Test Link", "Test Category", 100, "남청우", "1234");
         postResponse = new PostResponse(1L, "Test Content", "Test Content", "Test Link", "Test Category", 100, "남청우",now, now);
 
     }
@@ -132,7 +137,43 @@ public class PostControllerTests {
                 .andExpect(jsonPath("$.data.post.updated_at",Matchers.notNullValue()));
 
         verify(postService, times(1)).getPostById(1L);
+    }
 
+    @Test
+    @DisplayName("Post 수정 성공")
+    void updatePost() throws Exception {
+        // given (준비)
+        Post updatePost = Post.builder()
+                .id(1L).title("Updated Title")
+                .content("Updated Content").link("Updated Link")
+                .category("Updated Category").score(50)
+                .author("남청우").password("1234")
+                .createdAt(now).updatedAt(now)
+                .build();
+
+        postResponse = PostResponse.fromEntity(updatePost);
+        given(postService.updatePost(eq(1L), any(UpdatePostRequest.class))).willReturn(postResponse);
+
+        // when (실행)
+        ResultActions resultActions = mockMvc.perform(
+                put("/api/post/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatePostRequest))
+        );
+
+        // then (검증)
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.post.id").value(postResponse.id())) // EnvelopeResponseDto의 data, post 필드 접근
+                .andExpect(jsonPath("$.data.post.title").value(postResponse.title()))
+                .andExpect(jsonPath("$.data.post.content").value(postResponse.content()))
+                .andExpect(jsonPath("$.data.post.link").value(postResponse.link()))
+                .andExpect(jsonPath("$.data.post.category").value(postResponse.category()))
+                .andExpect(jsonPath("$.data.post.score").value(postResponse.score()))
+                .andExpect(jsonPath("$.data.post.author").value(postResponse.author()))
+                .andExpect(jsonPath("$.data.post.created_at", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.data.post.updated_at",Matchers.notNullValue()));
+
+        verify(postService, times(1)).updatePost(eq(1L), any(UpdatePostRequest.class));
     }
 }
 
