@@ -34,5 +34,13 @@ public class PostController {
         return ResponseEntity.ok().body(EnvelopeResponse.success(postData));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EnvelopeResponse<PostWrapperResponse>> getPostById(@PathVariable Long id) {
+        PostResponse postResponse = postService.getPostById(id);
+        PostWrapperResponse postData = new PostWrapperResponse(postResponse);
+        return ResponseEntity.ok().body(EnvelopeResponse.success(postData));
+    }
+
+
 
 }
