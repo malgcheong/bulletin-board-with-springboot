@@ -2,6 +2,7 @@ package com.swjungle.board.post.service;
 
 
 import com.swjungle.board.common.dto.EnvelopeResponse;
+import com.swjungle.board.common.dto.MessageResponse;
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
 import com.swjungle.board.post.dto.PostWrapperListResponse;
@@ -43,5 +44,11 @@ public class PostService {
         Post existingPost = postRepository.getReferenceById(id);
         existingPost.update(updatePostRequest.title(), updatePostRequest.content(), updatePostRequest.link(), updatePostRequest.category(), updatePostRequest.score(), updatePostRequest.author(), updatePostRequest.password());
         return PostResponse.fromEntity(postRepository.save(existingPost));
+    }
+
+    public MessageResponse deletePost(Long id) {
+        Post existingPost = postRepository.getReferenceById(id);
+        postRepository.deleteById(id);
+        return new MessageResponse("삭제 완료");
     }
 }
