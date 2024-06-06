@@ -47,7 +47,8 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Post(String title, String content, String link, String category, int score, String author, String password){
+    public Post(Long id, String title, String content, String link, String category, int score, String author, String password, LocalDateTime createdAt, LocalDateTime updatedAt){
+        this.id = id;
         this.title = title;
         this.content = content;
         this.link = link;
@@ -55,6 +56,8 @@ public class Post {
         this.score = score;
         this.author = author;
         this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
 

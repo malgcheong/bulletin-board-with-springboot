@@ -13,7 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,14 +35,17 @@ public class PostServiceTests {
     private CreatePostRequest createPostRequest;
     private PostResponse postResponse;
     private Post post;
+    private LocalDateTime now;
 
     @BeforeEach
     void setup() {
+        now = LocalDateTime.now(); // 현재 시간 가져오기
         post = Post.builder()
-                .title("Test Title")
+                .id(1L).title("Test Title")
                 .content("Test Content").link("Test Link")
                 .category("Test Category").score(100)
                 .author("남청우").password("1234")
+                .createdAt(now).updatedAt(now)
                 .build();
 
         createPostRequest = new CreatePostRequest("Test Title", "Test Content", "Test Link", "Test Category", 100, "남청우", "1234");
@@ -62,6 +67,9 @@ public class PostServiceTests {
         assertThat(postResponse.category()).isEqualTo("Test Category");
         assertThat(postResponse.score()).isEqualTo(100);
         assertThat(postResponse.author()).isEqualTo("남청우");
+        assertThat(postResponse.createdAt()).isEqualTo(now);
+        assertThat(postResponse.updatedAt()).isEqualTo(now);
+
         verify(postRepository, times(1)).save(any(Post.class));
     }
 
@@ -76,7 +84,35 @@ public class PostServiceTests {
 
         // then (검증)
         assertThat(allPosts).hasSize(1);
-        assertThat(allPosts.get(0)).isEqualTo(post);
+        assertThat(allPosts.get(0).id()).isEqualTo(1L);
+        assertThat(allPosts.get(0).title()).isEqualTo("Test Title");
+        assertThat(allPosts.get(0).content()).isEqualTo("Test Content");
+        assertThat(allPosts.get(0).link()).isEqualTo("Test Link");
+        assertThat(allPosts.get(0).category()).isEqualTo("Test Category");
+        assertThat(allPosts.get(0).score()).isEqualTo(100);
+        assertThat(allPosts.get(0).author()).isEqualTo("남청우");
+        assertThat(allPosts.get(0).createdAt()).isEqualTo(now);
+        assertThat(allPosts.get(0).updatedAt()).isEqualTo(now);
+    }
 
+    @Test
+    @DisplayName("Post 조회 성공")
+    void PostServiceTests() {
+        // given (준비)
+        given(postRepository.findById(1L)).willReturn(Optional.of(post));
+
+        // when (실행)
+        PostResponse postResponse = postService.getPostById(1L);
+
+        // then (검증)
+        assertThat(postResponse.id()).isEqualTo(1L);
+        assertThat(postResponse.title()).isEqualTo("Test Title");
+        assertThat(postResponse.content()).isEqualTo("Test Content");
+        assertThat(postResponse.link()).isEqualTo("Test Link");
+        assertThat(postResponse.category()).isEqualTo("Test Category");
+        assertThat(postResponse.score()).isEqualTo(100);
+        assertThat(postResponse.author()).isEqualTo("남청우");
+        assertThat(postResponse.createdAt()).isEqualTo(now);
+        assertThat(postResponse.updatedAt()).isEqualTo(now);
     }
 }
