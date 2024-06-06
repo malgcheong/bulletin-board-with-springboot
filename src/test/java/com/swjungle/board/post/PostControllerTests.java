@@ -1,6 +1,7 @@
 package com.swjungle.board.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swjungle.board.common.dto.MessageResponse;
 import com.swjungle.board.post.controller.PostController;
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
@@ -174,6 +175,22 @@ public class PostControllerTests {
                 .andExpect(jsonPath("$.data.post.updated_at",Matchers.notNullValue()));
 
         verify(postService, times(1)).updatePost(eq(1L), any(UpdatePostRequest.class));
+    }
+
+    @Test
+    @DisplayName("Post 삭제 완료")
+    void PostControllerTests() throws Exception {
+        // given (준비)
+        MessageResponse messageResponse = new MessageResponse("삭제 완료");
+        given(postService.deletePost(1L)).willReturn(messageResponse);
+
+        // when (실행)
+        ResultActions resultActions = mockMvc.perform(delete("/api/post/{id}", 1L));
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.message").value("삭제 완료"));
+
+        // then (검증)
+        verify(postService, times(1)).deletePost(1L);
     }
 }
 
