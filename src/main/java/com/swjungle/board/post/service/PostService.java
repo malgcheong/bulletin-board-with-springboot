@@ -8,6 +8,8 @@ import com.swjungle.board.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -28,4 +30,8 @@ public class PostService {
                                 newPost.getAuthor(), newPost.getCreatedAt(),
                                 newPost.getUpdatedAt());
     }
+    public List<Post> getAllTodos() {
+        return postRepository.findAll();
+    }
+
 }
