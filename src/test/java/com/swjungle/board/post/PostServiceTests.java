@@ -2,6 +2,7 @@ package com.swjungle.board.post;
 
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
+import com.swjungle.board.post.dto.UpdatePostRequest;
 import com.swjungle.board.post.entity.Post;
 import com.swjungle.board.post.repository.PostRepository;
 import com.swjungle.board.post.service.PostService;
@@ -33,6 +34,7 @@ public class PostServiceTests {
 
 
     private CreatePostRequest createPostRequest;
+    private UpdatePostRequest updatePostRequest;
     private PostResponse postResponse;
     private Post post;
     private LocalDateTime now;
@@ -49,6 +51,7 @@ public class PostServiceTests {
                 .build();
 
         createPostRequest = new CreatePostRequest("Test Title", "Test Content", "Test Link", "Test Category", 100, "남청우", "1234");
+        updatePostRequest = new UpdatePostRequest("Updated Title", "Updated Content", "Updated Link", "Updated Category", 50, "남청우", "1234");
     }
 
     @Test
@@ -118,5 +121,38 @@ public class PostServiceTests {
         assertThat(postResponse.updatedAt()).isEqualTo(now);
 
         verify(postRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Post 수정 성공")
+    void updatePost() {
+        // given (준비)
+        given(postRepository.getReferenceById(1L)).willReturn(post);
+        Post updatePost = Post.builder()
+                .id(1L).title("Updated Title")
+                .content("Updated Content").link("Updated Link")
+                .category("Updated Category").score(50)
+                .author("남청우").password("1234")
+                .createdAt(now).updatedAt(now)
+                .build();
+
+        given(postRepository.save(any(Post.class))).willReturn(updatePost);
+
+        // when (실행)
+        PostResponse postResponse = postService.updatePost(1L, updatePostRequest);
+
+        // then (검증)
+        assertThat(postResponse.id()).isEqualTo(1L);
+        assertThat(postResponse.title()).isEqualTo("Updated Title"); // 수정된 값 검증
+        assertThat(postResponse.content()).isEqualTo("Updated Content");
+        assertThat(postResponse.link()).isEqualTo("Updated Link");
+        assertThat(postResponse.category()).isEqualTo("Updated Category");
+        assertThat(postResponse.score()).isEqualTo(50);
+        assertThat(postResponse.author()).isEqualTo("남청우");
+        assertThat(postResponse.createdAt()).isEqualTo(now);
+        assertThat(postResponse.updatedAt()).isEqualTo(now);
+
+        verify(postRepository, times(1)).getReferenceById(1L);
+        verify(postRepository, times(1)).save(any(Post.class));
     }
 }
