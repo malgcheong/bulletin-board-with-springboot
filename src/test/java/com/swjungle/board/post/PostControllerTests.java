@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PostController.class)
 @ImportAutoConfiguration(JpaRepositoriesAutoConfiguration.class) // JpaRepositoriesAutoConfiguration 추가
-public class BoardControllerTests {
+public class PostControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
