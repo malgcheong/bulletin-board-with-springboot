@@ -29,7 +29,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<EnvelopeResponse<PostWrapperListResponse>> getAllPosts() {
-        List<PostResponse> listPostResponse = PostResponse.valueOf(new ArrayList<>(postService.getAllTodos()));
+        List<PostResponse> listPostResponse = postService.getAllPosts();
         PostWrapperListResponse postData = new PostWrapperListResponse(listPostResponse);
         return ResponseEntity.ok().body(EnvelopeResponse.success(postData));
     }

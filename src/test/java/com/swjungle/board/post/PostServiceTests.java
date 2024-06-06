@@ -72,7 +72,7 @@ public class PostServiceTests {
         given(postRepository.findAll()).willReturn(List.of(post));
 
         // when (실행)
-        List<Post> allPosts = postService.getAllTodos();
+        List<PostResponse> allPosts = postService.getAllPosts();
 
         // then (검증)
         assertThat(allPosts).hasSize(1);

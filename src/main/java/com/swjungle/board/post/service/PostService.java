@@ -1,13 +1,17 @@
 package com.swjungle.board.post.service;
 
 
+import com.swjungle.board.common.dto.EnvelopeResponse;
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
+import com.swjungle.board.post.dto.PostWrapperListResponse;
 import com.swjungle.board.post.entity.Post;
 import com.swjungle.board.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,8 +34,8 @@ public class PostService {
                                 newPost.getAuthor(), newPost.getCreatedAt(),
                                 newPost.getUpdatedAt());
     }
-    public List<Post> getAllTodos() {
-        return postRepository.findAll();
+    public List<PostResponse> getAllPosts() {
+        return  PostResponse.valueOf(postRepository.findAll());
     }
 
 }
