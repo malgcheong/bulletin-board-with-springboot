@@ -53,7 +53,7 @@ public class PostServiceTests {
 
     @Test
     @DisplayName("Post 생성 성공")
-    void createTodo() {
+    void createPost() {
         // given (준비)
         given(postRepository.save(any(Post.class))).willReturn(post);
 
@@ -97,7 +97,7 @@ public class PostServiceTests {
 
     @Test
     @DisplayName("Post 조회 성공")
-    void PostServiceTests() {
+    void getPostById() {
         // given (준비)
         given(postRepository.findById(1L)).willReturn(Optional.of(post));
 

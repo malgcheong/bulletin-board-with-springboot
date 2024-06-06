@@ -61,7 +61,7 @@ public class PostControllerTests {
 
     @Test
     @DisplayName("Post 생성 성공")
-    void createTodo() throws Exception {
+    void createPostRequest() throws Exception {
         // given (준비)
         given(postService.createPost(any(CreatePostRequest.class))).willReturn(postResponse);
 
@@ -88,7 +88,7 @@ public class PostControllerTests {
 
     @Test
     @DisplayName("Post 전체 조회 성공")
-    void getAllTodos() throws Exception {
+    void getAllPosts() throws Exception {
         // given (준비)
         given(postService.getAllPosts()).willReturn(List.of(postResponse));
 
