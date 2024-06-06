@@ -34,4 +34,7 @@ public class PostService {
         return  PostResponse.valueOf(postRepository.findAll());
     }
 
+    public PostResponse getPostById(Long id) {
+        return PostResponse.fromEntity(postRepository.findById(id).orElse(null));
+    }
 }
