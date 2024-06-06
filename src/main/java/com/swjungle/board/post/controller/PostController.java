@@ -1,9 +1,11 @@
 package com.swjungle.board.post.controller;
 
 import com.swjungle.board.common.dto.EnvelopeResponse;
+import com.swjungle.board.common.dto.MessageResponse;
 import com.swjungle.board.post.dto.*;
 import com.swjungle.board.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.bridge.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,4 +47,9 @@ public class PostController {
         return ResponseEntity.ok().body(EnvelopeResponse.success(postData));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<EnvelopeResponse<MessageResponse>> deletePost(@PathVariable Long id) {
+        MessageResponse messageResponse = postService.deletePost(id);
+        return ResponseEntity.ok().body(EnvelopeResponse.success(messageResponse));
+    }
 }
