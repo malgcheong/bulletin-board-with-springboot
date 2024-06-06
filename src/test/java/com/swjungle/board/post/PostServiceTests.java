@@ -1,5 +1,6 @@
 package com.swjungle.board.post;
 
+import com.swjungle.board.common.dto.MessageResponse;
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
 import com.swjungle.board.post.dto.UpdatePostRequest;
@@ -154,5 +155,21 @@ public class PostServiceTests {
 
         verify(postRepository, times(1)).getReferenceById(1L);
         verify(postRepository, times(1)).save(any(Post.class));
+    }
+
+    @Test
+    @DisplayName("Post 삭제 성공")
+    void deletePost() {
+        // given (준비)
+        given(postRepository.getReferenceById(1L)).willReturn(post);
+
+        // when (실행)
+        MessageResponse messageResponse = postService.deletePost(1L);
+
+        // then (검증)
+        assertThat(messageResponse.message()).isEqualTo("삭제 완료");
+
+        verify(postRepository, times(1)).getReferenceById(1L);
+        verify(postRepository, times(1)).deleteById(1L);
     }
 }
