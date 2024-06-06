@@ -5,6 +5,7 @@ import com.swjungle.board.common.dto.EnvelopeResponse;
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
 import com.swjungle.board.post.dto.PostWrapperListResponse;
+import com.swjungle.board.post.dto.UpdatePostRequest;
 import com.swjungle.board.post.entity.Post;
 import com.swjungle.board.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,11 @@ public class PostService {
 
     public PostResponse getPostById(Long id) {
         return PostResponse.fromEntity(postRepository.findById(id).orElse(null));
+    }
+
+    public PostResponse updatePost(Long id, UpdatePostRequest updatePostRequest) {
+        Post existingPost = postRepository.getReferenceById(id);
+        existingPost.update(updatePostRequest.title(), updatePostRequest.content(), updatePostRequest.link(), updatePostRequest.category(), updatePostRequest.score(), updatePostRequest.author(), updatePostRequest.password());
+        return PostResponse.fromEntity(postRepository.save(existingPost));
     }
 }

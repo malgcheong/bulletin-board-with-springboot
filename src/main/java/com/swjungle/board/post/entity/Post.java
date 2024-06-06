@@ -59,5 +59,16 @@ public class Post {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    public void update(String title, String content, String link, String category, int score, String author, String password){
+        this.title = title;
+        this.content = content;
+        this.link = link;
+        this.category = category;
+        this.score = score;
+        this.author = author;
+        this.password = password;
+    }
+
 }
 
