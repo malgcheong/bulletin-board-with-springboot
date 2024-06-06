@@ -2,15 +2,17 @@ package com.swjungle.board.post.controller;
 
 import com.swjungle.board.common.dto.EnvelopeResponse;
 import com.swjungle.board.common.dto.MessageResponse;
-import com.swjungle.board.post.dto.*;
+import com.swjungle.board.post.dto.request.CreatePostRequest;
+import com.swjungle.board.post.dto.request.UpdatePostRequest;
+import com.swjungle.board.post.dto.response.PostResponse;
+import com.swjungle.board.post.dto.response.PostWrapperListResponse;
+import com.swjungle.board.post.dto.response.PostWrapperResponse;
 import com.swjungle.board.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.bridge.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
