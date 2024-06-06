@@ -1,4 +1,4 @@
-package com.swjungle.board;
+package com.swjungle.board.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swjungle.board.post.controller.PostController;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -20,17 +18,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PostController.class)
-@ImportAutoConfiguration(JpaRepositoriesAutoConfiguration.class) // JpaRepositoriesAutoConfiguration 추가
 public class PostControllerTests {
     @Autowired
     private MockMvc mockMvc;
@@ -74,7 +73,7 @@ public class PostControllerTests {
 
 //         then (검증)
         resultActions.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.post.id").value(postResponse.id())) // EnvelopeResponseDto의 data 필드 접근
+                .andExpect(jsonPath("$.data.post.id").value(postResponse.id())) // EnvelopeResponseDto의 data, post 필드 접근
                 .andExpect(jsonPath("$.data.post.title").value(postResponse.title()))
                 .andExpect(jsonPath("$.data.post.content").value(postResponse.content()))
                 .andExpect(jsonPath("$.data.post.link").value(postResponse.link()))
@@ -85,6 +84,30 @@ public class PostControllerTests {
                 .andExpect(jsonPath("$.data.post.updated_at",Matchers.notNullValue()));
 
         verify(postService, times(1)).createPost(any(CreatePostRequest.class));
+    }
+
+    @Test
+    @DisplayName("Post 전체 조회 성공")
+    void getAllTodos() throws Exception {
+        // given (준비)
+        given(postService.getAllPosts()).willReturn(List.of(postResponse));
+
+        // when (실행)
+        ResultActions resultActions = mockMvc.perform(get("/api/post"));
+
+        // then (검증)
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.posts[0].id").value(postResponse.id())) // EnvelopeResponseDto의 data, posts 필드 접근
+                .andExpect(jsonPath("$.data.posts[0].title").value(postResponse.title()))
+                .andExpect(jsonPath("$.data.posts[0].content").value(postResponse.content()))
+                .andExpect(jsonPath("$.data.posts[0].link").value(postResponse.link()))
+                .andExpect(jsonPath("$.data.posts[0].category").value(postResponse.category()))
+                .andExpect(jsonPath("$.data.posts[0].score").value(postResponse.score()))
+                .andExpect(jsonPath("$.data.posts[0].author").value(postResponse.author()))
+                .andExpect(jsonPath("$.data.posts[0].created_at", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.data.posts[0].updated_at",Matchers.notNullValue()));
+
+        verify(postService, times(1)).getAllPosts();
     }
 }
 
