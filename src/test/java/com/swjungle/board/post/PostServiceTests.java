@@ -93,6 +93,8 @@ public class PostServiceTests {
         assertThat(allPosts.get(0).author()).isEqualTo("남청우");
         assertThat(allPosts.get(0).createdAt()).isEqualTo(now);
         assertThat(allPosts.get(0).updatedAt()).isEqualTo(now);
+
+        verify(postRepository, times(1)).findAll();
     }
 
     @Test
@@ -114,5 +116,7 @@ public class PostServiceTests {
         assertThat(postResponse.author()).isEqualTo("남청우");
         assertThat(postResponse.createdAt()).isEqualTo(now);
         assertThat(postResponse.updatedAt()).isEqualTo(now);
+
+        verify(postRepository, times(1)).findById(1L);
     }
 }
