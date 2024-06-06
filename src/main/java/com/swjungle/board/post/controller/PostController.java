@@ -1,10 +1,7 @@
 package com.swjungle.board.post.controller;
 
 import com.swjungle.board.common.dto.EnvelopeResponse;
-import com.swjungle.board.post.dto.CreatePostRequest;
-import com.swjungle.board.post.dto.PostWrapperListResponse;
-import com.swjungle.board.post.dto.PostWrapperResponse;
-import com.swjungle.board.post.dto.PostResponse;
+import com.swjungle.board.post.dto.*;
 import com.swjungle.board.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,6 +38,11 @@ public class PostController {
         return ResponseEntity.ok().body(EnvelopeResponse.success(postData));
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity<EnvelopeResponse<PostWrapperResponse>> updatePost(@PathVariable Long id, @RequestBody UpdatePostRequest updatePostRequest) {
+        PostResponse postResponse = postService.updatePost(id, updatePostRequest);
+        PostWrapperResponse postData = new PostWrapperResponse(postResponse);
+        return ResponseEntity.ok().body(EnvelopeResponse.success(postData));
+    }
 
 }
