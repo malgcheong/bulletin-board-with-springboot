@@ -109,5 +109,30 @@ public class PostControllerTests {
 
         verify(postService, times(1)).getAllPosts();
     }
+
+    @Test
+    @DisplayName("Post 조회 성공")
+    void getPostById() throws Exception{
+        // given (준비)
+        given(postService.getPostById(1L)).willReturn(postResponse);
+
+        // when (실행)
+        ResultActions resultActions = mockMvc.perform(get("/api/post/{id}", 1L));
+
+        // then (검증)
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.post.id").value(postResponse.id())) // EnvelopeResponseDto의 data, post 필드 접근
+                .andExpect(jsonPath("$.data.post.title").value(postResponse.title()))
+                .andExpect(jsonPath("$.data.post.content").value(postResponse.content()))
+                .andExpect(jsonPath("$.data.post.link").value(postResponse.link()))
+                .andExpect(jsonPath("$.data.post.category").value(postResponse.category()))
+                .andExpect(jsonPath("$.data.post.score").value(postResponse.score()))
+                .andExpect(jsonPath("$.data.post.author").value(postResponse.author()))
+                .andExpect(jsonPath("$.data.post.created_at", Matchers.notNullValue()))
+                .andExpect(jsonPath("$.data.post.updated_at",Matchers.notNullValue()));
+
+        verify(postService, times(1)).getPostById(1L);
+
+    }
 }
 
