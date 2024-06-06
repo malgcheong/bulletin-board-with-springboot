@@ -1,4 +1,4 @@
-package com.swjungle.board;
+package com.swjungle.board.post;
 
 import com.swjungle.board.post.dto.CreatePostRequest;
 import com.swjungle.board.post.dto.PostResponse;
@@ -13,14 +13,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class) // JUnit5와 Mockito 결합
-public class BoardServiceTests {
+public class PostServiceTests {
 
     @InjectMocks
     private PostService postService;
@@ -61,6 +63,20 @@ public class BoardServiceTests {
         assertThat(postResponse.score()).isEqualTo(100);
         assertThat(postResponse.author()).isEqualTo("남청우");
         verify(postRepository, times(1)).save(any(Post.class));
+    }
+
+    @Test
+    @DisplayName("Post 전체 조회 성공")
+    void getAllPosts() {
+        // given (준비)
+        given(postRepository.findAll()).willReturn(List.of(post));
+
+        // when (실행)
+        List<Post> allPosts = postService.getAllTodos();
+
+        // then (검증)
+        assertThat(allPosts).hasSize(1);
+        assertThat(allPosts.get(0)).isEqualTo(post);
 
     }
 }
