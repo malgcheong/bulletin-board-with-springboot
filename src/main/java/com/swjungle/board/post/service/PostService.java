@@ -28,11 +28,7 @@ public class PostService {
                 .build();
 
         Post newPost = postRepository.save(post);
-        return new PostResponse(newPost.getId(), newPost.getTitle(),
-                                newPost.getContent(), newPost.getLink(),
-                                newPost.getCategory(), newPost.getScore(),
-                                newPost.getAuthor(), newPost.getCreatedAt(),
-                                newPost.getUpdatedAt());
+        return PostResponse.fromEntity(newPost);
     }
     public List<PostResponse> getAllPosts() {
         return  PostResponse.valueOf(postRepository.findAll());
