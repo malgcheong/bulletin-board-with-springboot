@@ -39,7 +39,7 @@ public class PostService {
     }
 
     public List<PostResponse> getAllPosts() {
-        return  PostResponse.valueOf(postRepository.findAll());
+        return  PostResponse.valueOf(postRepository.findAllByOrderByUpdatedAtDesc());
     }
 
     public PostResponse getPostById(Long id) {
