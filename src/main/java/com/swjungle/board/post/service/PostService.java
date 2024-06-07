@@ -47,11 +47,7 @@ public class PostService {
     }
 
     public PostResponse updatePost(Long id, UpdatePostRequest updatePostRequest) {
-        Post existingPost = postRepository.getReferenceById(id);
-
-        if (existingPost == null) {
-            throw new PostNotFoundException(id);
-        }
+        Post existingPost = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
 
         postRequestValidator.validate(updatePostRequest); // 유효성 검증
 
@@ -69,12 +65,7 @@ public class PostService {
     }
 
     public MessageResponse deletePost(Long id) {
-        Post existingPost = postRepository.getReferenceById(id);
-
-        if (existingPost == null) {
-            throw new PostNotFoundException(id);
-        }
-
+        Post existingPost = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
         postRepository.deleteById(id);
         return new MessageResponse("삭제 완료");
     }
