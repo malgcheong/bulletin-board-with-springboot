@@ -18,16 +18,11 @@ public class PostService {
     private final PostRepository postRepository;
 
     public PostResponse createPost(CreatePostRequest createPostRequest) {
-        Post post = Post.builder()
-                .title(createPostRequest.title())
-                .content(createPostRequest.content()).link(createPostRequest.link())
-                .category(createPostRequest.category()).score(createPostRequest.score())
-                .author(createPostRequest.author()).password(createPostRequest.password())
-                .build();
-
+        Post post = Post.of(createPostRequest.title(), createPostRequest.content(), createPostRequest.link(), createPostRequest.category(), createPostRequest.score(), createPostRequest.author(),createPostRequest.password());
         Post newPost = postRepository.save(post);
         return PostResponse.fromEntity(newPost);
     }
+
     public List<PostResponse> getAllPosts() {
         return  PostResponse.valueOf(postRepository.findAll());
     }

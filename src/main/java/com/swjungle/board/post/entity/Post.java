@@ -1,10 +1,7 @@
 package com.swjungle.board.post.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -45,6 +42,14 @@ public class Post {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    static public Post of(String title, String content, String link, String category, int score, String author, String password){
+        return Post.builder()
+                .title(title).content(content)
+                .link(link).category(category)
+                .score(score).author(author)
+                .password(password).build();
+    }
 
     @Builder
     public Post(Long id, String title, String content, String link, String category, int score, String author, String password, LocalDateTime createdAt, LocalDateTime updatedAt){
