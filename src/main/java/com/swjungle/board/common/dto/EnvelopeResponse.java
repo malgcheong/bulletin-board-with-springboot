@@ -10,7 +10,11 @@ public record EnvelopeResponse<T> (String code, String message, T data) {
     }
 
     // 에러 응답 생성
-    public static <T> EnvelopeResponse<T> error(CommonErrorCode commonErrorCode) {
-        return new EnvelopeResponse<>(commonErrorCode.getStatus(), commonErrorCode.getMessage(), null);
+    public static <T> EnvelopeResponse<T> error(CommonErrorCode commonErrorCode, String message) {
+        if (message != null)
+            return new EnvelopeResponse<>(commonErrorCode.getStatus(), message, null);
+        else
+            return new EnvelopeResponse<>(commonErrorCode.getStatus(), commonErrorCode.getMessage(), null);
     }
+
 }
