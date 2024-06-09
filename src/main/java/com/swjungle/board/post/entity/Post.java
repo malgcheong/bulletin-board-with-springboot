@@ -1,5 +1,6 @@
 package com.swjungle.board.post.entity;
 
+import com.swjungle.board.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,6 +18,11 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // Member와의 관계 설정 (JoinColumn 수정)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", referencedColumnName = "id") // member_id 컬럼으로 Member 엔티티의 id 참조
+    private Member member;
 
     @Column(nullable = false)
     private String title;
