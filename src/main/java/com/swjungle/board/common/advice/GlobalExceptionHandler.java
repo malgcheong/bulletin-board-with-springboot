@@ -16,8 +16,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<EnvelopeResponse<String>> handleException(Exception ex) {
-        return ResponseEntity.status(CommonErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
-                .body(EnvelopeResponse.error(CommonErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage()));
+        return ResponseEntity.status(CommonErrorCode.SERVER_ERROR.getHttpStatus())
+                .body(EnvelopeResponse.error(CommonErrorCode.SERVER_ERROR, ex.getMessage()));
     }
 
     @ExceptionHandler(PostNotFoundException.class)
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidPostRequestException.class)
     public ResponseEntity<EnvelopeResponse<List<String>>> handleInvalidPostRequestException(InvalidPostRequestException ex) {
         List<String> errorMessages = ex.getErrors();
-        return ResponseEntity.status(CommonErrorCode.INVALID_PARAMETER.getHttpStatus())
-                .body(EnvelopeResponse.error(CommonErrorCode.INVALID_PARAMETER, errorMessages));
+        return ResponseEntity.status(CommonErrorCode.BAD_REQUEST.getHttpStatus())
+                .body(EnvelopeResponse.error(CommonErrorCode.BAD_REQUEST, errorMessages));
     }
 }
