@@ -2,10 +2,12 @@ package com.swjungle.board.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swjungle.board.common.dto.MessageResponse;
+import com.swjungle.board.common.security.JwtAuthenticationFilter;
+import com.swjungle.board.common.security.JwtTokenProvider;
 import com.swjungle.board.post.controller.PostController;
 import com.swjungle.board.post.dto.request.CreatePostRequest;
-import com.swjungle.board.post.dto.response.PostResponse;
 import com.swjungle.board.post.dto.request.UpdatePostRequest;
+import com.swjungle.board.post.dto.response.PostResponse;
 import com.swjungle.board.post.entity.Post;
 import com.swjungle.board.post.service.PostService;
 import org.hamcrest.Matchers;
@@ -18,6 +20,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,9 +40,14 @@ public class PostControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private WebApplicationContext context; // Inject WebApplicationContext
+
     @MockBean
     private PostService postService;
 
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
     private Post post;
     private CreatePostRequest createPostRequest;
     private UpdatePostRequest updatePostRequest;
@@ -48,6 +57,12 @@ public class PostControllerTests {
 
     @BeforeEach
     void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context)
+//                .apply(springSecurity())
+//                .addFilters(new JwtAuthenticationFilter(jwtTokenProvider)) // JwtAuthenticationFilter 추가
+                .build();
+
+
         now = LocalDateTime.now(); // 현재 시간 가져오기
         objectMapper = new ObjectMapper(); // ObjectMapper 객체 생성 및 초기화
         LocalDateTime now = LocalDateTime.now(); // 현재 시간 가져오기
