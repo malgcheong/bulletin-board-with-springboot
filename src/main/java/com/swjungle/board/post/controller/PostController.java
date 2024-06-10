@@ -3,6 +3,7 @@ package com.swjungle.board.post.controller;
 import com.swjungle.board.common.dto.EnvelopeResponse;
 import com.swjungle.board.common.dto.MessageResponse;
 import com.swjungle.board.post.dto.request.CreatePostRequest;
+import com.swjungle.board.post.dto.request.DeletePostRequest;
 import com.swjungle.board.post.dto.request.UpdatePostRequest;
 import com.swjungle.board.post.dto.response.PostResponse;
 import com.swjungle.board.post.dto.response.PostWrapperListResponse;
@@ -50,8 +51,8 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<EnvelopeResponse<MessageResponse>> deletePost(@PathVariable Long id) {
-        MessageResponse messageResponse = postService.deletePost(id);
+    public ResponseEntity<EnvelopeResponse<MessageResponse>> deletePost(@PathVariable Long id, @RequestBody DeletePostRequest deletePostRequest) {
+        MessageResponse messageResponse = postService.deletePost(id, deletePostRequest);
         return ResponseEntity.ok().body(EnvelopeResponse.success(messageResponse));
     }
 }
