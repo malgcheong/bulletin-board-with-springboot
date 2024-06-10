@@ -37,6 +37,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth  // 메서드 체이닝으로 변경
                         .requestMatchers("/api/auth/signup", "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/post", "/api/post/*").permitAll() // GET 요청만 허용
+                        .requestMatchers(HttpMethod.GET, "/api/comment", "/api/comment/*").permitAll() // GET 요청만 허용
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터 추가
