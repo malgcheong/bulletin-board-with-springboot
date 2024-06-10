@@ -59,6 +59,11 @@ public class Member {
         USER, // 일반 사용자
         ADMIN // 관리자
     }
+
+    public void updateId(Long id){
+        this.id = id;
+    }
+
 }
 
 

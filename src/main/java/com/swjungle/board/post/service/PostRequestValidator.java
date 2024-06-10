@@ -29,11 +29,6 @@ public class PostRequestValidator {
             errors.add("작성자는 필수 입력 값입니다.");
         }
 
-        // password 검증
-        if (isBlank(request.password())) {
-            errors.add("비밀번호는 필수 입력 값입니다.");
-        }
-
         if (!errors.isEmpty()) {
             throw new InvalidPostRequestException(errors);
         }
@@ -52,16 +47,6 @@ public class PostRequestValidator {
         // content 검증
         if (isBlank(request.content())) {
             errors.add("내용은 필수 입력 값입니다.");
-        }
-
-        // author 검증
-        if (isBlank(request.author())) {
-            errors.add("작성자는 필수 입력 값입니다.");
-        }
-
-        // password 검증
-        if (isBlank(request.password())) {
-            errors.add("비밀번호는 필수 입력 값입니다.");
         }
 
         if (!errors.isEmpty()) {

@@ -7,6 +7,7 @@ import com.swjungle.board.member.exception.InvalidMemberRequestException;
 import com.swjungle.board.member.exception.InvalidPasswordException;
 import com.swjungle.board.member.exception.MemberNotFoundException;
 import com.swjungle.board.post.exception.InvalidPostRequestException;
+import com.swjungle.board.post.exception.PostAuthorizationException;
 import com.swjungle.board.post.exception.PostNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,6 +57,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(EnvelopeResponse.error(CommonErrorCode.NO_ACCOUNT, ex.getMessage()));
     }
 
+    @ExceptionHandler(PostAuthorizationException.class)
+    public ResponseEntity<EnvelopeResponse<String>> handlePostAuthorizationException(PostAuthorizationException ex) {
+        return ResponseEntity.status(CommonErrorCode.NO_ACCOUNT.getHttpStatus())
+                .body(EnvelopeResponse.error(CommonErrorCode.NO_ACCOUNT, ex.getMessage()));
+    }
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<EnvelopeResponse<String>> handleInvalidPasswordException(InvalidPasswordException ex) {
         return ResponseEntity.status(CommonErrorCode.WRONG_PASSWORD.getHttpStatus())
