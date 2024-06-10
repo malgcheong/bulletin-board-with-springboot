@@ -73,7 +73,7 @@ public class PostService {
 
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("USER")))
             if (!existingPost.getAuthor().equals(username)) // username 검증
-                throw new PostAuthorizationException(username); // 권한 예외 발생
+                throw new PostAuthorizationException(username, "update"); // 권한 예외 발생
 
         existingPost.update(
                 updatePostRequest.title(),
@@ -95,7 +95,7 @@ public class PostService {
 
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("USER")))
             if (!existingPost.getAuthor().equals(username)) // username 검증
-                throw new PostAuthorizationException(username); // 권한 예외 발생
+                throw new PostAuthorizationException(username, "delete"); // 권한 예외 발생
 
         postRepository.deleteById(id);
         return new MessageResponse("삭제 완료");
