@@ -6,6 +6,7 @@ import com.swjungle.board.post.dto.response.PostResponse;
 import com.swjungle.board.post.dto.request.UpdatePostRequest;
 import com.swjungle.board.post.entity.Post;
 import com.swjungle.board.post.repository.PostRepository;
+import com.swjungle.board.post.service.PostRequestValidator;
 import com.swjungle.board.post.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +34,9 @@ public class PostServiceTests {
     private PostService postService;
     @Mock
     private PostRepository postRepository;
+
+    @Mock // 필드 주입
+    private PostRequestValidator postRequestValidator;
 
 
     private CreatePostRequest createPostRequest;
@@ -81,7 +86,7 @@ public class PostServiceTests {
     @DisplayName("Post 전체 조회 성공")
     void getAllPosts() {
         // given (준비)
-        given(postRepository.findAll()).willReturn(List.of(post));
+        given(postRepository.findAllByOrderByUpdatedAtDesc()).willReturn(List.of(post));
 
         // when (실행)
         List<PostResponse> allPosts = postService.getAllPosts();
@@ -98,7 +103,7 @@ public class PostServiceTests {
         assertThat(allPosts.get(0).createdAt()).isEqualTo(now);
         assertThat(allPosts.get(0).updatedAt()).isEqualTo(now);
 
-        verify(postRepository, times(1)).findAll();
+        verify(postRepository, times(1)).findAllByOrderByUpdatedAtDesc();
     }
 
     @Test
@@ -128,7 +133,7 @@ public class PostServiceTests {
     @DisplayName("Post 수정 성공")
     void updatePost() {
         // given (준비)
-        given(postRepository.getReferenceById(1L)).willReturn(post);
+        given(postRepository.findById(1L)).willReturn(Optional.ofNullable(post));
         Post updatePost = Post.builder()
                 .id(1L).title("Updated Title")
                 .content("Updated Content").link("Updated Link")
@@ -153,7 +158,7 @@ public class PostServiceTests {
         assertThat(postResponse.createdAt()).isEqualTo(now);
         assertThat(postResponse.updatedAt()).isEqualTo(now);
 
-        verify(postRepository, times(1)).getReferenceById(1L);
+        verify(postRepository, times(1)).findById(1L);
         verify(postRepository, times(1)).save(any(Post.class));
     }
 
@@ -161,7 +166,7 @@ public class PostServiceTests {
     @DisplayName("Post 삭제 성공")
     void deletePost() {
         // given (준비)
-        given(postRepository.getReferenceById(1L)).willReturn(post);
+        given(postRepository.findById(1L)).willReturn(Optional.ofNullable(post));
 
         // when (실행)
         MessageResponse messageResponse = postService.deletePost(1L);
@@ -169,7 +174,7 @@ public class PostServiceTests {
         // then (검증)
         assertThat(messageResponse.message()).isEqualTo("삭제 완료");
 
-        verify(postRepository, times(1)).getReferenceById(1L);
+        verify(postRepository, times(1)).findById(1L);
         verify(postRepository, times(1)).deleteById(1L);
     }
 }
