@@ -15,6 +15,7 @@ import com.swjungle.board.post.exception.PostNotFoundException;
 import com.swjungle.board.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -70,8 +71,9 @@ public class PostService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername().toString();
 
-        if (!existingPost.getAuthor().equals(username)) // username 검증
-            throw new PostAuthorizationException(username); // 권한 예외 발생
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("USER")))
+            if (!existingPost.getAuthor().equals(username)) // username 검증
+                throw new PostAuthorizationException(username); // 권한 예외 발생
 
         existingPost.update(
                 updatePostRequest.title(),
@@ -91,8 +93,9 @@ public class PostService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername().toString();
 
-        if (!existingPost.getAuthor().equals(username)) // username 검증
-            throw new PostAuthorizationException(username); // 권한 예외 발생
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("USER")))
+            if (!existingPost.getAuthor().equals(username)) // username 검증
+                throw new PostAuthorizationException(username); // 권한 예외 발생
 
         postRepository.deleteById(id);
         return new MessageResponse("삭제 완료");
