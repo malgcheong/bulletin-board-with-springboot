@@ -10,6 +10,7 @@ public enum CommonErrorCode {
 
     WRONG_PASSWORD(Status.FAIL.name(), HttpStatus.BAD_REQUEST, "Password is invalid"),
     NO_ACCOUNT(Status.FAIL.name(), HttpStatus.NOT_FOUND, "Member not found with username"),
+    POST_UNAUTHORIZED(Status.FAIL.name(), HttpStatus.UNAUTHORIZED, "User is not authorized to access this resource"),
     DUPLICATE_ACCOUNT(Status.FAIL.name(), HttpStatus.CONFLICT, "Username already in use"),
     BAD_REQUEST(Status.FAIL.name(), HttpStatus.BAD_REQUEST, "Invalid parameter included"),
     NOT_FOUND(Status.FAIL.name(), HttpStatus.NOT_FOUND, "Resource not exists"),

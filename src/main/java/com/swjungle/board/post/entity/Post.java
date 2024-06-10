@@ -39,9 +39,6 @@ public class Post {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false)
-    private String password;
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -49,36 +46,35 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    static public Post of(String title, String content, String link, String category, int score, String author, String password){
+    static public Post of(Member member,String title, String content, String link, String category, int score, String author){
         return Post.builder()
+                .member(member)
                 .title(title).content(content)
                 .link(link).category(category)
                 .score(score).author(author)
-                .password(password).build();
+                .build();
     }
 
     @Builder
-    public Post(Long id, String title, String content, String link, String category, int score, String author, String password, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Post(Long id, Member member, String title, String content, String link, String category, int score, String author, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id = id;
+        this.member = member;
         this.title = title;
         this.content = content;
         this.link = link;
         this.category = category;
         this.score = score;
         this.author = author;
-        this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public void update(String title, String content, String link, String category, int score, String author, String password){
+    public void update(String title, String content, String link, String category, int score){
         this.title = title;
         this.content = content;
         this.link = link;
         this.category = category;
         this.score = score;
-        this.author = author;
-        this.password = password;
     }
 
 }
